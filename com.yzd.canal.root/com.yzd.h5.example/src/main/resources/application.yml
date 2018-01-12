@@ -1,0 +1,8 @@
+spring:
+  datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://192.168.3.30:3306/tb_other_test?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8
+      username: canal
+      password: canal
+mybatis:
+   mapperLocations: classpath:/com/yzd/h5/example/dao/mapper/*.xml

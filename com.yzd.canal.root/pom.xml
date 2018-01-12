@@ -10,7 +10,20 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>com.yzd.canal.example</module>
+        <module>com.yzd.h5.example</module>
     </modules>
-
-
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.4.0.RELEASE</version>
+        <relativePath/>
+        <!-- lookup parent from repository -->
+    </parent>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <target.dir>${basedir}/../target</target.dir>
+        <java.version>1.8</java.version>
+        <start-class></start-class>
+    </properties>
 </project>

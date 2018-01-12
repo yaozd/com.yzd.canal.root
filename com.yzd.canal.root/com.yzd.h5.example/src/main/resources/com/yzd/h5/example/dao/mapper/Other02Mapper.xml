@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yzd.h5.example.dao.mapper.Other02Mapper" >
+  <resultMap id="BaseResultMap" type="com.yzd.h5.example.dao.entity.Other02" >
+    <id column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uid, name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from other_02
+    where uid = #{uid,jdbcType=INTEGER}
+  </select>
+  <insert id="insert" parameterType="com.yzd.h5.example.dao.entity.Other02" useGeneratedKeys="true" keyProperty="uid" >
+    insert into other_02 (name)
+    values (#{name,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yzd.h5.example.dao.entity.Other02" useGeneratedKeys="true" keyProperty="uid" >
+    insert into other_02
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yzd.h5.example.dao.entity.Other02" >
+    update other_02
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yzd.h5.example.dao.entity.Other02" >
+    update other_02
+    set name = #{name,jdbcType=VARCHAR}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+</mapper>
