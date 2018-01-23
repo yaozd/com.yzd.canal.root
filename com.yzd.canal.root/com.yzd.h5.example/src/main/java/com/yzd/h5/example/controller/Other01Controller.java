@@ -1,15 +1,15 @@
 package com.yzd.h5.example.controller;
 
 import com.yzd.h5.example.dao.entity.Other01;
-import com.yzd.h5.example.dao.mapper.Other01Mapper;
 import com.yzd.h5.example.service.inf.IOther01ServiceInf;
+import com.yzd.h5.example.utils.cacheExt.RedisCache;
+import com.yzd.h5.example.utils.cacheSetting.RedisCacheKeyEnum;
+import com.yzd.h5.example.utils.cacheSetting.RedisCacheTimestampTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -19,20 +19,41 @@ import java.util.List;
 public class Other01Controller {
     @Autowired
     IOther01ServiceInf iOther01ServiceInf;
+
     @RequestMapping("/doInsert")
     @ResponseBody
     public String doInsert() {
         SimpleDateFormat sdf = new SimpleDateFormat("DD-hhmmss");
-        String date=sdf.format(new Date());
-        Other01 item=new Other01();
+        String date = sdf.format(new Date());
+        Other01 item = new Other01();
         item.setName(date);
         iOther01ServiceInf.insertSelective(item);
         return "ok";
     }
+
     @RequestMapping("/doSelectAll")
     @ResponseBody
     public List<Other01> doSelectAll() {
-        List<Other01> other01List= iOther01ServiceInf.selectAll();
+        List<Other01> other01List = iOther01ServiceInf.selectAll();
         return other01List;
+    }
+
+    @RequestMapping("/doSelectById")
+    @ResponseBody
+    public Other01 doSelectById() {
+        Other01 item = iOther01ServiceInf.selectByPrimaryKey(6);
+        return item;
+    }
+
+    @RequestMapping("/doUpdateById")
+    @ResponseBody
+    public Integer doUpdateById() {
+        SimpleDateFormat sdf = new SimpleDateFormat("DD-hhmmss");
+        String date = sdf.format(new Date());
+        Other01 item = new Other01();
+        item.setUid(6);
+        item.setName(date);
+        Integer count = iOther01ServiceInf.updateByPrimaryKeySelective(item);
+        return count;
     }
 }

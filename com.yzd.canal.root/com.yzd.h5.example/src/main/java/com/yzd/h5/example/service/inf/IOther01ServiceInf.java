@@ -8,4 +8,8 @@ public interface IOther01ServiceInf {
     int insertSelective(Other01 record);
 
     List<Other01> selectAll();
+
+    Other01 selectByPrimaryKey(Integer uid);
+
+    int updateByPrimaryKeySelective(Other01 record);
 }
