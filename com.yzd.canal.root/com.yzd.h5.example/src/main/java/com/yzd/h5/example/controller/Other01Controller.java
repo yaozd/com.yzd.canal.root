@@ -2,9 +2,6 @@ package com.yzd.h5.example.controller;
 
 import com.yzd.h5.example.dao.entity.Other01;
 import com.yzd.h5.example.service.inf.IOther01ServiceInf;
-import com.yzd.h5.example.utils.cacheExt.RedisCache;
-import com.yzd.h5.example.utils.cacheSetting.RedisCacheKeyEnum;
-import com.yzd.h5.example.utils.cacheSetting.RedisCacheTimestampTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

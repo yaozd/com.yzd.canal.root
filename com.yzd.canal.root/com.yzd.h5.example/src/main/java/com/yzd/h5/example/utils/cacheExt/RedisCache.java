@@ -1,6 +1,6 @@
 package com.yzd.h5.example.utils.cacheExt;
 
-import com.yzd.h5.example.utils.cacheSetting.RedisCacheKeyEnum;
+import com.yzd.h5.example.utils.cacheSetting.RedisCacheKeyListEnum;
 import com.yzd.h5.example.utils.cacheSetting.RedisCacheTimestampTypeEnum;
 
 import java.lang.annotation.*;
@@ -10,7 +10,8 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface RedisCache {
-    RedisCacheKeyEnum key();
-
+    //缓存列表
+    RedisCacheKeyListEnum key();
+    //缓存资源版本类型：公共与个人
     RedisCacheTimestampTypeEnum timestampType();
 }
