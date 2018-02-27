@@ -35,4 +35,11 @@ public class LoginSessionUtil {
         cookieUtil.deleteCookie(CookieKeyList.L_U_Key.name());
         CurrentUserContextHolder.remove();
     }
+
+    public static boolean isLogin() {
+        return getCurrentUser()!=null;
+    }
+    public static void removeCurrentUserContextHolder(){
+        CurrentUserContextHolder.remove();
+    }
 }
