@@ -45,4 +45,10 @@
     set name = #{name,jdbcType=VARCHAR}
     where uid = #{uid,jdbcType=INTEGER}
   </update>
+  <!--==================================================华丽分割线==================================================-->
+  <select id="selectList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from other_01
+  </select>
 </mapper>

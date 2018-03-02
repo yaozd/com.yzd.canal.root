@@ -5,7 +5,9 @@ import com.yzd.common.cache.utils.setting.CachedSetting;
 import static com.yzd.h5.example.utils.cacheSetting.RedisCacheConfig.PROJECT_NO;
 
 public enum RedisCacheKeyListEnum {
-    UserBaseInfo(newCachedSetting("作用：缓存用户基本信息","1"));
+    //缓存--名称对应key
+    UserBaseInfo(newCachedSetting("作用：缓存用户基本信息","1")),
+    Other1SelectAll(newCachedSetting("作用：缓存Other1SelectAll信息","1"));
 
     RedisCacheKeyListEnum(CachedSetting cachedSetting) {
         this.setCachedSetting(cachedSetting);

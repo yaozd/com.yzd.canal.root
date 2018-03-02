@@ -2,6 +2,8 @@ package com.yzd.h5.example.dao.mapper;
 
 import com.yzd.h5.example.dao.entity.Other01;
 
+import java.util.List;
+
 /**
  * @author YZD
  */
@@ -15,4 +17,6 @@ public interface Other01Mapper {
     int updateByPrimaryKeySelective(Other01 record);
 
     int updateByPrimaryKey(Other01 record);
+
+    List<Other01> selectList();
 }

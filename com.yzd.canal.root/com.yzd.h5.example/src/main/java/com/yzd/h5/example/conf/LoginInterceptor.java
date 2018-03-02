@@ -20,7 +20,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         boolean isLogin = LoginSessionUtil.isLogin();
         if (!isLogin) {
             String redirectUrl = request.getRequestURI();
-            response.sendRedirect(request.getContextPath() + "/account/doLogin?redirect=" + redirectUrl);
+            //response.sendRedirect(request.getContextPath() + "/account/doLogin?redirect=" + redirectUrl);
+            response.sendRedirect(request.getContextPath() + "/login.html");
             return false;
         }
         return true;
