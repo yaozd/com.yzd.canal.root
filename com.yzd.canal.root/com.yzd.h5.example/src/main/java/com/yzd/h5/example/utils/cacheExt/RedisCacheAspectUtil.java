@@ -5,6 +5,7 @@ import com.yzd.common.cache.utils.setting.CachedSetting;
 import com.yzd.common.cache.utils.wrapper.CachedWrapper;
 import com.yzd.common.cache.utils.wrapper.CachedWrapperExecutor;
 import com.yzd.h5.example.utils.fastjson.FastJsonUtil;
+import com.yzd.h5.example.utils.timeVersionIdExt.TimeVersionId;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 
@@ -38,7 +39,8 @@ public class RedisCacheAspectUtil {
                 new CachedWrapperExecutor<String>() {
                     @Override
                     public String execute() {
-                        return String.valueOf(System.currentTimeMillis()) ;
+                        //通过twitter的snowflake算法解决数据时间戳重复问题
+                        return TimeVersionId.getInstance().getTimeVersion() ;
                     }
                 });
         return wrapperValue_keyTimestamp.getData();
