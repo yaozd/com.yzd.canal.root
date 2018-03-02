@@ -47,9 +47,14 @@ public class RedisCachePrivateEvictAspect {
             String timestampKeyName = methodCache.timestampType().keyFullName() + ":" + currentUserId;
             System.out.println(timestampKeyName);
             ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
+            //timestampKeyValue
             String timestampKeyValue = redisUtil.get(timestampKeyName);
-            System.out.println(timestampKeyValue);
-            redisUtil.del(timestampKeyName);
+            System.out.println("timestampKeyValue="+timestampKeyValue);
+            if(timestampKeyValue!=null){
+                System.out.println("step01=redisUtil.del(timestampKeyName);");
+                redisUtil.del(timestampKeyName);
+            }
+
             System.out.println("RedisCachePublicAspect->redis cache aspect step end");
         }
         //返回结果
