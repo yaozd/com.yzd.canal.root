@@ -3,6 +3,7 @@ package com.yzd.h5.example.utils.cacheExt;
 import com.google.common.base.Preconditions;
 import com.yzd.common.cache.redis.sharded.ShardedRedisUtil;
 import com.yzd.common.cache.utils.setting.CachedSetting;
+import com.yzd.common.cache.utils.wrapper.CachedWrapper;
 import com.yzd.h5.example.utils.cacheSetting.RedisCacheTimestampTypeEnum;
 import com.yzd.h5.example.utils.fastjson.FastJsonUtil;
 import com.yzd.h5.example.utils.sessionExt.LoginSessionUtil;
@@ -48,13 +49,16 @@ public class RedisCachePrivateEvictAspect {
             System.out.println(timestampKeyName);
             ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
             //timestampKeyValue
-            String timestampKeyValue = redisUtil.get(timestampKeyName);
-            System.out.println("timestampKeyValue="+timestampKeyValue);
+            CachedWrapper<String> timestampKeyValue=redisUtil.getCachedWrapper(timestampKeyName);
+            System.out.println("/////////////////////");
             if(timestampKeyValue!=null){
-                System.out.println("step01=redisUtil.del(timestampKeyName);");
+                System.out.println("step01=timestampKeyValue="+timestampKeyValue.getData());
+                System.out.println("step02=redisUtil.del(timestampKeyName);");
+                //
+                redisUtil.lpush("EvictAllKeyList","SaveAllKeySet:"+timestampKeyValue.getData());
+                //
                 redisUtil.del(timestampKeyName);
             }
-
             System.out.println("RedisCachePublicAspect->redis cache aspect step end");
         }
         //返回结果

@@ -56,16 +56,16 @@ public class RedisCachePrivateAspect {
         CachedSetting cachedSetting = methodCache.key().getCachedSetting();
         cachedSetting.setKey(dataKeyNameWithTimestamp);
         //1，查询缓存2，执行方法
-        String cacheDataInRedis = getCacheDataInRedis(proceedingJoinPoint, whereToJson, cachedSetting);
+        String cacheDataInRedis = getCacheDataInRedis(proceedingJoinPoint, whereToJson, cachedSetting,timestampKeyValue);
         result = deserialize(returnType, cacheDataInRedis);
         System.out.println("RedisCachePrivateAspect->redis cache aspect step end");
         //返回结果
         return result;
     }
 
-    private String getCacheDataInRedis(ProceedingJoinPoint proceedingJoinPoint, String whereToJson, CachedSetting cachedSetting) {
+    private String getCacheDataInRedis(ProceedingJoinPoint proceedingJoinPoint, String whereToJson, CachedSetting cachedSetting,String timestampKeyValue) {
         ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
-        CachedWrapper<String> resultCached = redisUtil.getPublicCachedWrapperByMutexKey(cachedSetting, whereToJson,
+        CachedWrapper<String> resultCached = redisUtil.getPublicCachedWrapperByTimestampKeyValue(cachedSetting, whereToJson,timestampKeyValue,
         new CachedWrapperExecutor<String>() {
             @Override
             public String execute() {
@@ -84,7 +84,7 @@ public class RedisCachePrivateAspect {
 
     private String getTimestampKey(String timestampKeyName) {
         ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
-        CachedWrapper<String> wrapperValue_keyTimestamp = redisUtil.getCachedWrapperByMutexKey(timestampKeyName, 60 * 60 * 24, 5, 3,
+        CachedWrapper<String> wrapperValue_keyTimestamp = redisUtil.getTimestampKey(timestampKeyName, 60 * 60 * 24, 5, 3,300,
                 new CachedWrapperExecutor<String>() {
                     @Override
                     public String execute() {
