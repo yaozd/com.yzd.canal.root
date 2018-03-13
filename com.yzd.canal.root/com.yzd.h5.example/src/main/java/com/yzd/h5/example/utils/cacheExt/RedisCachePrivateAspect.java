@@ -5,10 +5,12 @@ import com.yzd.common.cache.redis.sharded.ShardedRedisUtil;
 import com.yzd.common.cache.utils.setting.CachedSetting;
 import com.yzd.common.cache.utils.wrapper.CachedWrapper;
 import com.yzd.common.cache.utils.wrapper.CachedWrapperExecutor;
+import com.yzd.h5.example.utils.cacheSetting.RedisCacheConfig;
 import com.yzd.h5.example.utils.cacheSetting.RedisCacheKeyListEnum;
 import com.yzd.h5.example.utils.cacheSetting.RedisCacheTimestampTypeEnum;
 import com.yzd.h5.example.utils.fastjson.FastJsonUtil;
 import com.yzd.h5.example.utils.sessionExt.LoginSessionUtil;
+import com.yzd.h5.example.utils.timeVersionIdExt.TimeVersionId;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -49,23 +51,24 @@ public class RedisCachePrivateAspect {
         String currentUserId= currentUserIdVal.toString();
         //P01.Timestamp:userId:1000 目前格式-201802-28-1714
         String timestampKeyName=methodCache.timestampType().keyFullName()+":"+currentUserId;
-        String timestampKeyValue=getTimestampKey(timestampKeyName);
+        String timestampKeyValue=getTimestampKey(timestampKeyName,RedisCacheConfig.ExpireAllKeySet,RedisCacheConfig.SaveAllKeySet);
         String whereToJson =FastJsonUtil.serialize(where);
         //P01.UserBaseInfo.1000:1519809133085:86d794ec9adae08014b485df7acf3dac 目前格式-201802-28-1714
         String dataKeyNameWithTimestamp=methodCache.key().name()+"."+currentUserId+":"+timestampKeyValue;
         CachedSetting cachedSetting = methodCache.key().getCachedSetting();
         cachedSetting.setKey(dataKeyNameWithTimestamp);
         //1，查询缓存2，执行方法
-        String cacheDataInRedis = getCacheDataInRedis(proceedingJoinPoint, whereToJson, cachedSetting,timestampKeyValue);
+        String saveAllKeySetName= RedisCacheConfig.SaveAllKeySet+timestampKeyValue;
+        String cacheDataInRedis = getCacheDataInRedis(proceedingJoinPoint, whereToJson, cachedSetting,saveAllKeySetName);
         result = deserialize(returnType, cacheDataInRedis);
         System.out.println("RedisCachePrivateAspect->redis cache aspect step end");
         //返回结果
         return result;
     }
 
-    private String getCacheDataInRedis(ProceedingJoinPoint proceedingJoinPoint, String whereToJson, CachedSetting cachedSetting,String timestampKeyValue) {
+    private String getCacheDataInRedis(ProceedingJoinPoint proceedingJoinPoint, String whereToJson, CachedSetting cachedSetting,String saveAllKeySetName) {
         ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
-        CachedWrapper<String> resultCached = redisUtil.getPublicCachedWrapperByTimestampKeyValue(cachedSetting, whereToJson,timestampKeyValue,
+        CachedWrapper<String> resultCached = redisUtil.getPublicCachedWrapperByTimestampKeyValue(cachedSetting, whereToJson,saveAllKeySetName,
         new CachedWrapperExecutor<String>() {
             @Override
             public String execute() {
@@ -82,13 +85,20 @@ public class RedisCachePrivateAspect {
         return resultCached.getData();
     }
 
-    private String getTimestampKey(String timestampKeyName) {
+    private String getTimestampKey(String timestampKeyName,String ExpireAllKeySet,String prefixSaveAllKeySet) {
         ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
-        CachedWrapper<String> wrapperValue_keyTimestamp = redisUtil.getTimestampKey(timestampKeyName, 60 * 60 * 24, 5, 3,300,
+        CachedWrapper<String> wrapperValue_keyTimestamp = redisUtil.getTimestampKey(timestampKeyName,
+                60 * 60 * 24,
+                5,
+                3,
+                300,
+                ExpireAllKeySet,
+                prefixSaveAllKeySet,
                 new CachedWrapperExecutor<String>() {
                     @Override
                     public String execute() {
-                        return String.valueOf(System.currentTimeMillis()) ;
+                        //通过twitter的snowflake算法解决数据时间戳重复问题
+                        return TimeVersionId.getInstance().getTimeVersion() ;
                     }
                 });
         return wrapperValue_keyTimestamp.getData();
