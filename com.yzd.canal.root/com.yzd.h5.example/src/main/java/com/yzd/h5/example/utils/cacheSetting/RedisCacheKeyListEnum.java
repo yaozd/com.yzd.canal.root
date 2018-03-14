@@ -32,7 +32,9 @@ public enum RedisCacheKeyListEnum {
     }
     //
     private static CachedSetting newCachedSetting(String desc, String version){
-        return new CachedSetting(PROJECT_NO,"", 600, 15, 5,300,version,desc);
+        //暂定过期时间为10天
+        int keyExpireSec=60*60*24*10;
+        return new CachedSetting(PROJECT_NO,"", keyExpireSec, 15, 5,300,version,desc);
     }
 
 }

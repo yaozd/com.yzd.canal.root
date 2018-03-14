@@ -2,6 +2,7 @@ package com.yzd.h5.example.utils.cacheExt;
 
 import com.google.common.base.Preconditions;
 import com.yzd.common.cache.utils.setting.CachedSetting;
+import com.yzd.h5.example.utils.cacheSetting.RedisCacheConfig;
 import com.yzd.h5.example.utils.cacheSetting.RedisCacheKeyListEnum;
 import com.yzd.h5.example.utils.cacheSetting.RedisCacheTimestampTypeEnum;
 import com.yzd.h5.example.utils.fastjson.FastJsonUtil;
@@ -40,14 +41,15 @@ public class RedisCachePublicAspect {
         Preconditions.checkArgument(!isPrivateUserIdType, "缓存资源版本类型：公共数据有数据,不能是RedisCacheTimestampTypeEnum.privateUserId类型缓存时间戳；当前方法路径：" + method.toString());
         //P01.Timestamp:userId:1000 目前格式-201802-28-1714
         String timestampKeyName = methodCache.timestampType().keyFullName();
-        String timestampKeyValue = RedisCacheAspectUtil.getTimestampKey(timestampKeyName);
+        String timestampKeyValue = RedisCacheAspectUtil.getTimestampKey(timestampKeyName, RedisCacheConfig.ExpireAllKeySet,RedisCacheConfig.SaveAllKeySet,RedisCacheConfig.TimeoutForPublicKey);
         String whereToJson = FastJsonUtil.serialize(where);
         //P01.UserBaseInfo.1000:1519809133085:86d794ec9adae08014b485df7acf3dac 目前格式-201802-28-1714
         String dataKeyNameWithTimestamp = methodCache.key().name()+ ":" + timestampKeyValue;
         CachedSetting cachedSetting = methodCache.key().getCachedSetting();
         cachedSetting.setKey(dataKeyNameWithTimestamp);
         //1，查询缓存2，执行方法
-        String cacheDataInRedis = RedisCacheAspectUtil.getCacheDataInRedis(proceedingJoinPoint, whereToJson, cachedSetting);
+        String saveAllKeySetName= RedisCacheConfig.SaveAllKeySet+timestampKeyValue;
+        String cacheDataInRedis = RedisCacheAspectUtil.getCacheDataInRedis(proceedingJoinPoint, whereToJson, cachedSetting,timestampKeyName,saveAllKeySetName);
         result = RedisCacheAspectUtil.deserialize(cacheDataInRedis,returnType,methodCache.modelType());
         System.out.println("RedisCachePublicAspect->redis cache aspect step end");
         //返回结果

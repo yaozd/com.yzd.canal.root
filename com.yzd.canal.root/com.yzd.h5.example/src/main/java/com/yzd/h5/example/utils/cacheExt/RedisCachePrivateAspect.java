@@ -22,6 +22,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 
+
 @Aspect
 @Component
 public class RedisCachePrivateAspect {
@@ -35,14 +36,14 @@ public class RedisCachePrivateAspect {
 
         Object result = null;
         //获得请求参数，目前缓存方法只接受一个请求参数
-        Object[] where = getRequestArgs(proceedingJoinPoint);
+        Object[] where = RedisCacheAspectUtil.getRequestArgs(proceedingJoinPoint);
         //获得缓存方法的返回值类型
-        Method method = getMethod(proceedingJoinPoint);
-        Class returnType = getReturnType(method);
+        Method method = RedisCacheAspectUtil.getMethod(proceedingJoinPoint);
+        Class returnType = RedisCacheAspectUtil.getReturnType(method);
         Preconditions.checkArgument(!"void".equalsIgnoreCase(returnType.getTypeName()), "缓存方法的返回值类型不能是void；当前方法路径：" + method.toString());
         //key策略：KEY_NAME+WHERE_MD5(数据结构版本+请求参数)
         //获得当前方法的注解信息
-        RedisCachePrivate methodCache = getAnnotation(method, RedisCachePrivate.class);
+        RedisCachePrivate methodCache = RedisCacheAspectUtil.getAnnotation(method, RedisCachePrivate.class);
         Boolean isPrivateUserIdType=RedisCacheTimestampTypeEnum.privateUserId.equals(methodCache.timestampType());
         Preconditions.checkArgument(isPrivateUserIdType, "缓存资源版本类型：个人私有数据,必须是RedisCacheTimestampTypeEnum.privateUserId类型缓存时间戳；当前方法路径：" + method.toString());
         //个人用户数据的缓存，需要在KEY上增加用户的ID--个人用户的ID是通过全局的用户登录信息获取
@@ -51,7 +52,7 @@ public class RedisCachePrivateAspect {
         String currentUserId= currentUserIdVal.toString();
         //P01.Timestamp:userId:1000 目前格式-201802-28-1714
         String timestampKeyName=methodCache.timestampType().keyFullName()+":"+currentUserId;
-        String timestampKeyValue=getTimestampKey(timestampKeyName,RedisCacheConfig.ExpireAllKeySet,RedisCacheConfig.SaveAllKeySet);
+        String timestampKeyValue=RedisCacheAspectUtil.getTimestampKey(timestampKeyName,RedisCacheConfig.ExpireAllKeySet,RedisCacheConfig.SaveAllKeySet,RedisCacheConfig.TimeoutForPublicKey);
         String whereToJson =FastJsonUtil.serialize(where);
         //P01.UserBaseInfo.1000:1519809133085:86d794ec9adae08014b485df7acf3dac 目前格式-201802-28-1714
         String dataKeyNameWithTimestamp=methodCache.key().name()+"."+currentUserId+":"+timestampKeyValue;
@@ -59,80 +60,10 @@ public class RedisCachePrivateAspect {
         cachedSetting.setKey(dataKeyNameWithTimestamp);
         //1，查询缓存2，执行方法
         String saveAllKeySetName= RedisCacheConfig.SaveAllKeySet+timestampKeyValue;
-        String cacheDataInRedis = getCacheDataInRedis(proceedingJoinPoint, whereToJson, cachedSetting,saveAllKeySetName);
-        result = deserialize(returnType, cacheDataInRedis);
+        String cacheDataInRedis = RedisCacheAspectUtil.getCacheDataInRedis(proceedingJoinPoint, whereToJson, cachedSetting,timestampKeyName,saveAllKeySetName);
+        result = RedisCacheAspectUtil.deserialize(cacheDataInRedis,returnType,methodCache.modelType());
         System.out.println("RedisCachePrivateAspect->redis cache aspect step end");
         //返回结果
         return result;
-    }
-
-    private String getCacheDataInRedis(ProceedingJoinPoint proceedingJoinPoint, String whereToJson, CachedSetting cachedSetting,String saveAllKeySetName) {
-        ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
-        CachedWrapper<String> resultCached = redisUtil.getPublicCachedWrapperByTimestampKeyValue(cachedSetting, whereToJson,saveAllKeySetName,
-        new CachedWrapperExecutor<String>() {
-            @Override
-            public String execute() {
-                Object tempObj = null;
-                try {
-                    tempObj = proceedingJoinPoint.proceed();
-                } catch (Throwable e) {
-                    throw new IllegalStateException(e);
-                }
-                String resultToStr = FastJsonUtil.serialize(tempObj);
-                return resultToStr;
-            }
-        });
-        return resultCached.getData();
-    }
-
-    private String getTimestampKey(String timestampKeyName,String ExpireAllKeySet,String prefixSaveAllKeySet) {
-        ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
-        CachedWrapper<String> wrapperValue_keyTimestamp = redisUtil.getTimestampKey(timestampKeyName,
-                60 * 60 * 24,
-                5,
-                3,
-                300,
-                ExpireAllKeySet,
-                prefixSaveAllKeySet,
-                new CachedWrapperExecutor<String>() {
-                    @Override
-                    public String execute() {
-                        //通过twitter的snowflake算法解决数据时间戳重复问题
-                        return TimeVersionId.getInstance().getTimeVersion() ;
-                    }
-                });
-        return wrapperValue_keyTimestamp.getData();
-    }
-    private Object deserialize(Class returnType, String cacheDataInRedis) {
-        // 序列化结果应该是List对象
-        if (returnType.isAssignableFrom(List.class)) {
-            return FastJsonUtil.deserializeList(cacheDataInRedis, returnType);
-        } else {
-            return FastJsonUtil.deserialize(cacheDataInRedis, returnType);
-        }
-    }
-
-    //获得当前方法的请求参数
-    private Object[] getRequestArgs(ProceedingJoinPoint jp) {
-        Object[] args = jp.getArgs();
-        return args;
-    }
-
-    //获得当前方法
-    private Method getMethod(ProceedingJoinPoint jp) {
-        MethodSignature sign = (MethodSignature) jp.getSignature();
-        Method method = sign.getMethod();
-        return method;
-    }
-
-    //获得当前方法的注解信息
-    private <T extends Annotation> T getAnnotation(Method method, Class<T> clazz) {
-        return method.getAnnotation(clazz);
-    }
-
-    //获得当前方法的返回值类型
-    private Class getReturnType(Method method) {
-        Class returnType = method.getReturnType();
-        return returnType;
     }
 }

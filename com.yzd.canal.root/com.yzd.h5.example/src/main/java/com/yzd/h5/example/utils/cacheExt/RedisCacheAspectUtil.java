@@ -15,9 +15,9 @@ import java.util.List;
 
 public class RedisCacheAspectUtil {
 
-    public static String getCacheDataInRedis(ProceedingJoinPoint proceedingJoinPoint, String whereToJson, CachedSetting cachedSetting) {
+    public static String getCacheDataInRedis(ProceedingJoinPoint proceedingJoinPoint, String whereToJson, CachedSetting cachedSetting,String timestampKeyName,String saveAllKeySetName) {
         ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
-        CachedWrapper<String> resultCached = redisUtil.getPublicCachedWrapperByMutexKey(cachedSetting, whereToJson,
+        CachedWrapper<String> resultCached = redisUtil.getPublicCachedWrapperByTimestampKeyValue(cachedSetting, whereToJson,timestampKeyName,saveAllKeySetName,
                 new CachedWrapperExecutor<String>() {
                     @Override
                     public String execute() {
@@ -33,9 +33,18 @@ public class RedisCacheAspectUtil {
                 });
         return resultCached.getData();
     }
-    public static String getTimestampKey(String timestampKeyName) {
+
+    public static String getTimestampKey(String timestampKeyName,String ExpireAllKeySet,String prefixSaveAllKeySet,int timeoutForPublicKey) {
+        //理论上Timestamp与SaveAllKeySet的超时时间应该是相同的。
         ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
-        CachedWrapper<String> wrapperValue_keyTimestamp = redisUtil.getCachedWrapperByMutexKey(timestampKeyName, 60 * 60 * 24, 5, 3,
+        CachedWrapper<String> wrapperValue_keyTimestamp = redisUtil.getTimestampKey(timestampKeyName,
+                timeoutForPublicKey,
+                5,
+                3,
+                300,
+                ExpireAllKeySet,
+                prefixSaveAllKeySet,
+                timeoutForPublicKey,
                 new CachedWrapperExecutor<String>() {
                     @Override
                     public String execute() {
