@@ -4,9 +4,13 @@ package com.yzd.canal.example;
  * 当前记录信息
  */
 public class RecordInfo {
+    //库名
     private String schemaName;
+    //表名
     private String tableName;
+    //操作
     private String eventType;
+    //主键名
     private String primaryKey;
 
     public RecordInfo(String schemaName, String tableName, String eventType,String primaryKey) {

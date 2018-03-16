@@ -1,4 +1,4 @@
-package com.yzd.h5.example.utils.cacheSetting;
+package com.yzd.cache.cleaner.cacheSetting;
 
 public class RedisCacheConfig {
     //当前缓存项目代码
