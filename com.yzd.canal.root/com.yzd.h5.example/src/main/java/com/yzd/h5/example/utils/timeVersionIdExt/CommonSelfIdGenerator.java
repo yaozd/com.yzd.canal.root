@@ -1,8 +1,5 @@
 package com.yzd.h5.example.utils.timeVersionIdExt;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-
 import java.util.Calendar;
 
 public class CommonSelfIdGenerator {
@@ -41,12 +38,12 @@ public class CommonSelfIdGenerator {
 
     static void initWorkerId() {
         String workerId = System.getProperty("sjdbc.self.id.generator.worker.id");
-        if (!Strings.isNullOrEmpty(workerId)) {
+        if (!TimeVersionUtil2.isNullOrEmpty(workerId)) {
             setWorkerId(Long.valueOf(workerId));
             return;
         }
         workerId = System.getenv("SJDBC_SELF_ID_GENERATOR_WORKER_ID");
-        if (Strings.isNullOrEmpty(workerId)) {
+        if (TimeVersionUtil2.isNullOrEmpty(workerId)) {
             return;
         }
         setWorkerId(Long.valueOf(workerId));
@@ -58,7 +55,7 @@ public class CommonSelfIdGenerator {
      * @param workerId 工作进程Id
      */
     public static void setWorkerId(final Long workerId) {
-        Preconditions.checkArgument(workerId >= 0L && workerId < WORKER_ID_MAX_VALUE);
+        TimeVersionUtil2.checkArgument(workerId >= 0L && workerId < WORKER_ID_MAX_VALUE);
         CommonSelfIdGenerator.workerId = workerId;
     }
 
@@ -69,7 +66,7 @@ public class CommonSelfIdGenerator {
      */
     public synchronized Number generateId() {
         long time = clock.millis();
-        Preconditions.checkState(lastTime <= time, "Clock is moving backwards, last time is %d milliseconds, current time is %d milliseconds", lastTime, time);
+        TimeVersionUtil2.checkState(lastTime <= time, "Clock is moving backwards, last time is %d milliseconds, current time is %d milliseconds", lastTime, time);
         if (lastTime == time) {
             if (0L == (sequence = ++sequence & SEQUENCE_MASK)) {
                 time = waitUntilNextTime(time);
