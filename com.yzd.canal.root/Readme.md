@@ -31,5 +31,5 @@ P01.Other1SelectAll:1dben35yo3y8:XX| String| 公有资源缓存KEY的名称
 ```
 getCachedWrapperByTimestampKeyValue方法中的定义如下：
 //暂时取keyExpireSec过期时间 与 timestampTtl剩余时间（秒）中最小的值
-//todo 理论上讲keyExpireSec过期时间应该等于timestampTtl剩余时间（秒）；
+//todo 理论上讲keyExpireSec过期时间应该等于timestampTtl剩余时间（秒）； 
 ```
