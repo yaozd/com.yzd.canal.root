@@ -1,3 +1,7 @@
+### 0.数据库结构
+```
+.doc->tb_other_test.sql
+```
 ### 1.REDIS相关操作
 ```
 Redis操作字符串工具类封装：http://fanshuyao.iteye.com/blog/2326221
