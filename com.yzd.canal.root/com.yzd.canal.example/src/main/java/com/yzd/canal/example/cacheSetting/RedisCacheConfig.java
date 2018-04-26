@@ -1,4 +1,4 @@
-package com.yzd.h5.example.utils.cacheSetting;
+package com.yzd.canal.example.cacheSetting;
 
 public class RedisCacheConfig {
     //当前缓存项目代码
@@ -14,12 +14,11 @@ public class RedisCacheConfig {
     public final static Integer TimeoutForPublicKey=60*60*24*10;
     //临时测试使用过期时间为60秒
     //public final static Integer TimeoutForPublicKey=60;
-    //
     private static String getKeyFullName(String value) {
         return PROJECT_NO+"."+value;
     }
-    //
-    public static String getKeyFullNameForTimestamp(String timestampKey){
-        return PROJECT_NO+".Timestamp:"+timestampKey;
+    //理论来讲，多个项目的KEY的获取方法是要使用统一方法
+    public static String getKeyFullNameForTimestamp(String value) {
+        return PROJECT_NO+".Timestamp:"+value;
     }
 }

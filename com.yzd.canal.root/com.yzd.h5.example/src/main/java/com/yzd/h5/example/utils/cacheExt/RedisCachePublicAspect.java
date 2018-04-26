@@ -40,7 +40,7 @@ public class RedisCachePublicAspect {
         Boolean isPrivateUserIdType = RedisCacheTimestampTypeEnum.privateUserId.equals(methodCache.timestampType());
         Preconditions.checkArgument(!isPrivateUserIdType, "缓存资源版本类型：公共数据有数据,不能是RedisCacheTimestampTypeEnum.privateUserId类型缓存时间戳；当前方法路径：" + method.toString());
         //P01.Timestamp:userId:1000 目前格式-201802-28-1714
-        String timestampKeyName = methodCache.timestampType().keyFullName();
+        String timestampKeyName = methodCache.timestampType().getKeyFullNameForTimestamp();
         String timestampKeyValue = RedisCacheAspectUtil.getTimestampKey(timestampKeyName, RedisCacheConfig.ExpireAllKeySet,RedisCacheConfig.SaveAllKeySet,RedisCacheConfig.TimeoutForPublicKey);
         String whereToJson = FastJsonUtil.serialize(where);
         //P01.UserBaseInfo.1000:1519809133085:86d794ec9adae08014b485df7acf3dac 目前格式-201802-28-1714

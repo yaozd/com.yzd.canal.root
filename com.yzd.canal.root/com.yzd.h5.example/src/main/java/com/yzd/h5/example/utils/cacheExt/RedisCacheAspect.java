@@ -84,7 +84,7 @@ public class RedisCacheAspect {
 
     private String getTimestampKey(RedisCacheTimestampTypeEnum timestampType) {
         Integer userId=123;
-        String timestampKeyFullName= timestampType.keyFullName()+userId;
+        String timestampKeyFullName= timestampType.getKeyFullNameForTimestamp()+userId;
         ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
         CachedWrapper<String> wrapperValue_keyTimestamp = redisUtil.getCachedWrapperByMutexKey(timestampKeyFullName, 60 * 60 * 24, 5, 3,
                 new CachedWrapperExecutor<String>() {

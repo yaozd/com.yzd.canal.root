@@ -17,7 +17,7 @@ public class _CleanerJob {
     //删除旧的资源时间戳版本对应的所有缓存数据
     public void evictOldTimestampCacheData() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-        String beginLog="[checkTask]-Begin-currentTime= " + dateFormat.format(new Date());
+        String beginLog="[_CleanerJob]-Begin-currentTime= " + dateFormat.format(new Date());
         while (true){
             String keyName_SaveAllKeySet= CleanerTask.getListValue(RedisCacheConfig.EvictAllKeyList);
             if(StringUtils.isBlank(keyName_SaveAllKeySet)){

@@ -46,7 +46,7 @@ public class RedisCachePrivateEvictAspect {
             Preconditions.checkNotNull(currentUserIdVal, "LoginSessionUtil.getCurrentUser().getId()当前用户登录信息ID不能为空！");
             String currentUserId = currentUserIdVal.toString();
             //P01.Timestamp:userId:1000 目前格式-201802-28-1714
-            String timestampKeyName = methodCache.timestampType().keyFullName() + ":" + currentUserId;
+            String timestampKeyName = methodCache.timestampType().getKeyFullNameForTimestamp() + ":" + currentUserId;
             System.out.println(timestampKeyName);
             ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
             //timestampKeyValue

@@ -37,8 +37,8 @@ public enum RedisCacheTimestampTypeEnum {
         this.timestampKey = timestampKey;
     }
     //例：P01.Timestamp:userId:123
-    public String keyFullName(){
-        return PROJECT_NO+".Timestamp:"+this.timestampKey;
+    public String getKeyFullNameForTimestamp(){
+        return RedisCacheConfig.getKeyFullNameForTimestamp(this.timestampKey);
     }
 }
 

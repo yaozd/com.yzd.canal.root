@@ -51,7 +51,7 @@ public class RedisCachePrivateAspect {
         Preconditions.checkNotNull(currentUserIdVal,"LoginSessionUtil.getCurrentUser().getId()当前用户登录信息ID不能为空！");
         String currentUserId= currentUserIdVal.toString();
         //P01.Timestamp:userId:1000 目前格式-201802-28-1714
-        String timestampKeyName=methodCache.timestampType().keyFullName()+":"+currentUserId;
+        String timestampKeyName=methodCache.timestampType().getKeyFullNameForTimestamp()+":"+currentUserId;
         String timestampKeyValue=RedisCacheAspectUtil.getTimestampKey(timestampKeyName,RedisCacheConfig.ExpireAllKeySet,RedisCacheConfig.SaveAllKeySet,RedisCacheConfig.TimeoutForPublicKey);
         String whereToJson =FastJsonUtil.serialize(where);
         //P01.UserBaseInfo.1000:1519809133085:86d794ec9adae08014b485df7acf3dac 目前格式-201802-28-1714
