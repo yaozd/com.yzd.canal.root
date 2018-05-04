@@ -1,11 +1,11 @@
-package com.yzd.h5.example.utils.cacheExt;
+package com.yzd.example2.h5.utils.cacheExt;
 
 import com.yzd.common.cache.redis.sharded.ShardedRedisUtil;
-import com.yzd.common.cache.utils.setting.CachedSetting;
+import com.yzd.common.cache.utils.fastjson.FastJsonUtil;
+import com.yzd.common.cache.utils.setting.CachedSettingForTVCB;
 import com.yzd.common.cache.utils.wrapper.CachedWrapper;
 import com.yzd.common.cache.utils.wrapper.CachedWrapperExecutor;
-import com.yzd.h5.example.utils.fastjson.FastJsonUtil;
-import com.yzd.h5.example.utils.timeVersionIdExt.TimeVersionId;
+import com.yzd.example2.h5.utils.timeVersionIdExt.TimeVersionId;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 
@@ -14,26 +14,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class RedisCacheAspectUtil {
-
-    public static String getCacheDataInRedis(ProceedingJoinPoint proceedingJoinPoint, String whereToJson, CachedSetting cachedSetting,String timestampKeyName,String saveAllKeySetName) {
-        ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
-        CachedWrapper<String> resultCached = redisUtil.getPublicCachedWrapperByTimestampKeyValue(cachedSetting, whereToJson,timestampKeyName,saveAllKeySetName,
-                new CachedWrapperExecutor<String>() {
-                    @Override
-                    public String execute() {
-                        Object tempObj = null;
-                        try {
-                            tempObj = proceedingJoinPoint.proceed();
-                        } catch (Throwable e) {
-                            throw new IllegalStateException(e);
-                        }
-                        String resultToStr = FastJsonUtil.serialize(tempObj);
-                        return resultToStr;
-                    }
-                });
-        return resultCached.getData();
-    }
-
     public static String getTimestampKey(String timestampKeyName,String ExpireAllKeySet,String prefixSaveAllKeySet,int timeoutForPublicKey) {
         //理论上Timestamp与SaveAllKeySet的超时时间应该是相同的。
         ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
@@ -54,22 +34,6 @@ public class RedisCacheAspectUtil {
                 });
         return wrapperValue_keyTimestamp.getData();
     }
-    /**
-     * 相当于克隆了一个副本-数据更改不会影响主体-互不影响
-     * */
-    public static CachedSetting newCachedSetting(CachedSetting model){
-        CachedSetting item=new CachedSetting();
-        item.setProjectNo(model.getProjectNo());
-        item.setKey(model.getKey());
-        item.setKeyExpireSec(model.getKeyExpireSec());
-        item.setNullValueExpireSec(model.getNullValueExpireSec());
-        item.setKeyMutexExpireSec(model.getKeyMutexExpireSec());
-        item.setSleepMilliseconds(model.getSleepMilliseconds());
-        item.setDesc(model.getDesc());
-        item.setVersion(model.getVersion());
-        return item;
-    }
-
     public static Object deserialize(String cacheDataInRedis,Class returnType,  Class modelType) {
         // 序列化结果应该是List对象
         if (returnType.isAssignableFrom(List.class)) {
@@ -101,5 +65,24 @@ public class RedisCacheAspectUtil {
     public static Class getReturnType(Method method) {
         Class returnType = method.getReturnType();
         return returnType;
+    }
+
+    public static String getCacheDataInRedisForPuble(ProceedingJoinPoint proceedingJoinPoint, CachedSettingForTVCB cachedSettingForTVCB, String whereToJson, String keyNameForSaveAllKeySetWithTimestamp) {
+        ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
+        String result = redisUtil.getCachedDataForTVCB(cachedSettingForTVCB, whereToJson, keyNameForSaveAllKeySetWithTimestamp
+                , new CachedWrapperExecutor<String>() {
+                    @Override
+                    public String execute() {
+                        Object tempObj = null;
+                        try {
+                            tempObj = proceedingJoinPoint.proceed();
+                        } catch (Throwable e) {
+                            throw new IllegalStateException(e);
+                        }
+                        String resultToStr = FastJsonUtil.serialize(tempObj);
+                        return resultToStr;
+                    }
+                });
+        return result;
     }
 }

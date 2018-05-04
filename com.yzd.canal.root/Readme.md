@@ -33,3 +33,27 @@ getCachedWrapperByTimestampKeyValue方法中的定义如下：
 //暂时取keyExpireSec过期时间 与 timestampTtl剩余时间（秒）中最小的值
 //todo 理论上讲keyExpireSec过期时间应该等于timestampTtl剩余时间（秒）； 
 ```
+### 5.Redis删除所有Key
+```
+删除所有Key
+删除所有Key，可以使用Redis的flushdb和flushall命令
+//删除当前数据库中的所有Key
+flushdb
+//删除所有数据库中的key
+flushall
+注：keys 指令可以进行模糊匹配，但如果 Key 含空格，就匹配不到了，暂时还没发现好的解决办法。
+http://ssuupv.blog.163.com/blog/static/1461567220135610456193/
+```
+### 5.参考：基于Canal使用HTTP协议跨机房公网同步数据
+```
+基于Canal使用HTTP协议跨机房公网同步数据
+http://www.caosh.me/be-tech/canal-sync-db-over-http/
+```
+### 6.canal版本选择-选型时间：20180504
+```
+//备注：
+//目前阿里云RDS-mysql-5.6版本，可以使用 canal-server-v1.0.24,(canal-v1.0.25版本则不可用)
+//canal-server-v1.0.24 下载地址：https://github.com/alibaba/canal/releases
+//canal-server-v1.0.24版本-百度云有备份
+//
+```

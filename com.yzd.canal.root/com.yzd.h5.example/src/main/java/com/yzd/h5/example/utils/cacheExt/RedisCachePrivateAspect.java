@@ -56,7 +56,9 @@ public class RedisCachePrivateAspect {
         String whereToJson =FastJsonUtil.serialize(where);
         //P01.UserBaseInfo.1000:1519809133085:86d794ec9adae08014b485df7acf3dac 目前格式-201802-28-1714
         String dataKeyNameWithTimestamp=methodCache.key().name()+"."+currentUserId+":"+timestampKeyValue;
-        CachedSetting cachedSetting = methodCache.key().getCachedSetting();
+        // CachedSetting cachedSetting = methodCache.key().getCachedSetting();是有问题的是错误的，methodCache.key()是枚举相当于是一个单例
+        CachedSetting cachedSetting = RedisCacheAspectUtil.newCachedSetting(methodCache.key().getCachedSetting()) ;
+        //
         cachedSetting.setKey(dataKeyNameWithTimestamp);
         //1，查询缓存2，执行方法
         String saveAllKeySetName= RedisCacheConfig.SaveAllKeySet+timestampKeyValue;

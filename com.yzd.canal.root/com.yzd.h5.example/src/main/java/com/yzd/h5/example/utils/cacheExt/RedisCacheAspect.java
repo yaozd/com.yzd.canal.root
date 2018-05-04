@@ -55,7 +55,9 @@ public class RedisCacheAspect {
         Integer userId=123;
         String timestampKey = getTimestampKey(methodCache.timestampType());
         String keyName = methodCache.key().name();
-        CachedSetting cachedSetting = methodCache.key().getCachedSetting();
+        // CachedSetting cachedSetting = methodCache.key().getCachedSetting();是有问题的是错误的，methodCache.key()是枚举相当于是一个单例
+        CachedSetting cachedSetting = RedisCacheAspectUtil.newCachedSetting(methodCache.key().getCachedSetting()) ;
+        //
         cachedSetting.setKey(keyName+"."+userId);
         //2,
         String whereToJson = timestampKey+"|"+FastJsonUtil.serialize(where);

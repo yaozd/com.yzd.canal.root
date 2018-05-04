@@ -2,11 +2,9 @@ package com.yzd.h5.example.utils.cacheExt;
 
 import com.google.common.base.Preconditions;
 import com.yzd.common.cache.redis.sharded.ShardedRedisUtil;
-import com.yzd.common.cache.utils.setting.CachedSetting;
 import com.yzd.common.cache.utils.wrapper.CachedWrapper;
 import com.yzd.h5.example.utils.cacheSetting.RedisCacheConfig;
 import com.yzd.h5.example.utils.cacheSetting.RedisCacheTimestampTypeEnum;
-import com.yzd.h5.example.utils.fastjson.FastJsonUtil;
 import com.yzd.h5.example.utils.sessionExt.LoginSessionUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -29,10 +27,10 @@ public class RedisCachePrivateEvictAspect {
 
         Object result = null;
         try {
-            result =proceedingJoinPoint.proceed();
+            result = proceedingJoinPoint.proceed();
         } catch (Throwable e) {
             throw new IllegalStateException(e);
-        }finally {
+        } finally {
             //获得请求参数，目前缓存方法只接受一个请求参数
             Object[] where = RedisCacheAspectUtil.getRequestArgs(proceedingJoinPoint);
             //获得缓存方法的返回值类型
@@ -50,15 +48,15 @@ public class RedisCachePrivateEvictAspect {
             System.out.println(timestampKeyName);
             ShardedRedisUtil redisUtil = ShardedRedisUtil.getInstance();
             //timestampKeyValue
-            CachedWrapper<String> timestampKeyValue=redisUtil.getCachedWrapper(timestampKeyName);
+            CachedWrapper<String> timestampKeyValue = redisUtil.getCachedWrapper(timestampKeyName);
             System.out.println("/////////////////////");
-            if(timestampKeyValue!=null){
-                System.out.println("step01=timestampKeyValue="+timestampKeyValue.getData());
+            if (timestampKeyValue != null) {
+                System.out.println("step01=timestampKeyValue=" + timestampKeyValue.getData());
                 System.out.println("step02=redisUtil.del(timestampKeyName);");
                 //
-                String evictAllKeyList= RedisCacheConfig.EvictAllKeyList;
-                String saveAllKeySet=RedisCacheConfig.SaveAllKeySet+timestampKeyValue.getData();
-                redisUtil.lpush(evictAllKeyList,saveAllKeySet);
+                String evictAllKeyList = RedisCacheConfig.EvictAllKeyList;
+                String saveAllKeySet = RedisCacheConfig.SaveAllKeySet + timestampKeyValue.getData();
+                redisUtil.lpush(evictAllKeyList, saveAllKeySet);
                 //
                 redisUtil.del(timestampKeyName);
             }

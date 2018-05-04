@@ -9,27 +9,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>com.yzd.cache.cleaner</artifactId>
-    <packaging>jar</packaging>
-    <properties>
-        <redis.version>2.9.0</redis.version>
-        <commons-lang.version>2.6</commons-lang.version>
-        <slf4j-api.version>1.7.23</slf4j-api.version>
-    </properties>
+    <artifactId>com.yzd.example2.cacheConf</artifactId>
+
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.yzd.common</groupId>
             <artifactId>com.yzd.common.cache</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-        </dependency>
     </dependencies>
-
 </project>

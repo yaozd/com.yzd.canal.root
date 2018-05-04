@@ -1,12 +1,11 @@
-package com.yzd.h5.example.utils.cacheExt;
+package com.yzd.example2.h5.utils.cacheExt;
 
 import com.google.common.base.Preconditions;
-import com.yzd.common.cache.utils.setting.CachedSetting;
-import com.yzd.h5.example.utils.cacheSetting.RedisCacheConfig;
-import com.yzd.h5.example.utils.cacheSetting.RedisCacheKeyListEnum;
-import com.yzd.h5.example.utils.cacheSetting.RedisCacheTimestampTypeEnum;
-import com.yzd.h5.example.utils.fastjson.FastJsonUtil;
-import com.yzd.h5.example.utils.sessionExt.LoginSessionUtil;
+import com.yzd.common.cache.utils.fastjson.FastJsonUtil;
+import com.yzd.common.cache.utils.setting.CachedSettingForTVCB;
+import com.yzd.example2.cacheConf.cacheSetting.CacheConfig;
+import com.yzd.example2.cacheConf.cacheSetting.TimestampType;
+import com.yzd.example2.cacheConf.utils.CacheUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,7 +13,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
-
 
 @Aspect
 @Component
@@ -37,21 +35,18 @@ public class RedisCachePublicAspect {
         //key策略：KEY_NAME+WHERE_MD5(数据结构版本+请求参数)
         //获得当前方法的注解信息
         RedisCachePublic methodCache = RedisCacheAspectUtil.getAnnotation(method, RedisCachePublic.class);
-        Boolean isPrivateUserIdType = RedisCacheTimestampTypeEnum.privateUserId.equals(methodCache.timestampType());
-        Preconditions.checkArgument(!isPrivateUserIdType, "缓存资源版本类型：公共数据有数据,不能是RedisCacheTimestampTypeEnum.privateUserId类型缓存时间戳；当前方法路径：" + method.toString());
-        //P01.Timestamp:userId:1000 目前格式-201802-28-1714
-        String timestampKeyName = methodCache.timestampType().getKeyFullNameForTimestamp();
-        String timestampKeyValue = RedisCacheAspectUtil.getTimestampKey(timestampKeyName, RedisCacheConfig.ExpireAllKeySet,RedisCacheConfig.SaveAllKeySet,RedisCacheConfig.TimeoutForPublicKey);
+        Boolean isPrivateUserIdType = methodCache.key().getCacheKeyTimestamp().getTimestampType()== TimestampType.PrivateType;
+        Preconditions.checkArgument(!isPrivateUserIdType, "缓存资源版本类型：公共数据有数据,不能是TimestampType.PrivateType类型缓存时间戳；当前方法路径：" + method.toString());
+        String timestampKeyName = methodCache.key().getCacheKeyTimestamp().getKeyFullName();
+        String timestampKeyValue = RedisCacheAspectUtil.getTimestampKey(timestampKeyName, CacheConfig.ExpireAllKeySet,CacheConfig.SaveAllKeySet,CacheConfig.TimeoutForPublicKey);
         String whereToJson = FastJsonUtil.serialize(where);
         //P01.UserBaseInfo.1000:1519809133085:86d794ec9adae08014b485df7acf3dac 目前格式-201802-28-1714
         String dataKeyNameWithTimestamp = methodCache.key().name()+ ":" + timestampKeyValue;
-        // CachedSetting cachedSetting = methodCache.key().getCachedSetting();是有问题的是错误的，methodCache.key()是枚举相当于是一个单例
-        CachedSetting cachedSetting = RedisCacheAspectUtil.newCachedSetting(methodCache.key().getCachedSetting()) ;
-        //
-        cachedSetting.setKey(dataKeyNameWithTimestamp);
+        CachedSettingForTVCB cachedSettingForTVCB= CacheUtil.newCachedSettingForTVCB(methodCache.key().getCachedSettingForTVCB());
+        cachedSettingForTVCB.setKeyName(dataKeyNameWithTimestamp);
         //1，查询缓存2，执行方法
-        String saveAllKeySetName= RedisCacheConfig.SaveAllKeySet+timestampKeyValue;
-        String cacheDataInRedis = RedisCacheAspectUtil.getCacheDataInRedis(proceedingJoinPoint, whereToJson, cachedSetting,timestampKeyName,saveAllKeySetName);
+        String keyNameForSaveAllKeySetWithTimestamp= CacheConfig.getKeyFullNameForSaveAllKeySet(timestampKeyValue);
+        String cacheDataInRedis = RedisCacheAspectUtil.getCacheDataInRedisForPuble(proceedingJoinPoint,cachedSettingForTVCB, whereToJson, keyNameForSaveAllKeySetWithTimestamp);
         result = RedisCacheAspectUtil.deserialize(cacheDataInRedis,returnType,methodCache.modelType());
         System.out.println("RedisCachePublicAspect->redis cache aspect step end");
         //返回结果

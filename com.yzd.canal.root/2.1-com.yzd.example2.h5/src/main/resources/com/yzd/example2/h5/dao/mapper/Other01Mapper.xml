@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yzd.example2.h5.dao.mapper.Other01Mapper" >
+  <resultMap id="BaseResultMap" type="com.yzd.example2.h5.dao.entity.Other01" >
+    <id column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uid, name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from other_01
+    where uid = #{uid,jdbcType=INTEGER}
+  </select>
+  <insert id="insert" parameterType="com.yzd.example2.h5.dao.entity.Other01" useGeneratedKeys="true" keyProperty="uid" >
+    insert into other_01 (name)
+    values (#{name,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yzd.example2.h5.dao.entity.Other01" useGeneratedKeys="true" keyProperty="uid" >
+    insert into other_01
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yzd.example2.h5.dao.entity.Other01" >
+    update other_01
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yzd.example2.h5.dao.entity.Other01" >
+    update other_01
+    set name = #{name,jdbcType=VARCHAR}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <!--==================================================华丽分割线==================================================-->
+  <select id="selectList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from other_01
+  </select>
+</mapper>
