@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum  CacheKeyForPublicList {
-    Other1SelectAll(CacheKeyForTimestamp.TbOther01TM,10,"1.0","缓存Other1SelectAll信息","Other01");
+    Other1SelectAll(CacheKeyForTimestamp.TbOther01TM,10,"1.0","缓存Other1SelectAll信息","other_01");
     /**region*/
     CacheKeyForPublicList(CacheKeyForTimestamp cacheKeyTimestamp,int countForCopyData,String version,String desc,String... tables){
+        if(cacheKeyTimestamp.getTimestampType()!=TimestampType.PublicType){
+            throw new IllegalStateException("因为当前是公共缓存KEY的集合，所以缓存时间戳类型必须是TimestampType.PublicType（公有时间戳类型）");
+        }
         this.setCacheKeyTimestamp(cacheKeyTimestamp);
         String keyNameForTimestamp=cacheKeyTimestamp.getKeyFullName();
         this.setCachedSettingForTVCB(newCachedSetting(countForCopyData,version,desc,keyNameForTimestamp));

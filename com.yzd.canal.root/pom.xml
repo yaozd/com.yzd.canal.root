@@ -14,6 +14,7 @@
         <module>com.yzd.cache.cleaner</module>
         <module>2.1-com.yzd.example2.h5</module>
         <module>2.2-com.yzd.example2.cacheConf</module>
+        <module>2.3-com.yzd.example2.canal</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

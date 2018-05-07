@@ -20,8 +20,8 @@ public class CacheConfig {
     public static String getKeyFullNameForSpecific(String keyName){
         return PROJECT_NO+"."+CacheKeyType.S.name()+":"+keyName;
     }
-    public static String getKeyFullNameForTimestamp(CacheKeyForTimestamp cacheKeyForTimestamp){
-        return PROJECT_NO+"."+CacheKeyType.T.name()+":"+cacheKeyForTimestamp.name();
+    public static String getKeyFullNameForTimestamp(String timestampKeyName){
+        return PROJECT_NO+"."+CacheKeyType.T.name()+":"+timestampKeyName;
     }
     public static String getKeyFullNameForSaveAllKeySet(String timestampKeyValue){
         return SaveAllKeySet+timestampKeyValue;

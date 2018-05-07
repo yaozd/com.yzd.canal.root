@@ -26,6 +26,6 @@ public enum  CacheKeyForTimestamp {
     }
 
     public String getKeyFullName(){
-        return CacheConfig.getKeyFullNameForTimestamp(this);
+        return CacheConfig.getKeyFullNameForTimestamp(this.name());
     }
 }

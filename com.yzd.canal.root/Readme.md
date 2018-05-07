@@ -1,3 +1,4 @@
+### 项目意义：通过Redis+Canal实现数据的全量缓存
 ### 0.数据库结构
 ```
 .doc->tb_other_test.sql
