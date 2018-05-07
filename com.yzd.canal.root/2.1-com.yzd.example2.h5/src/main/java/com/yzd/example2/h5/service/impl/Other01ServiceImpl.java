@@ -35,7 +35,7 @@ public class Other01ServiceImpl implements IOther01ServiceInf {
 
     @Override
     public int updateByPrimaryKeySelective(Other01 record) {
-        return 0;
+        return other01Mapper1.updateByPrimaryKeySelective(record);
     }
 
 

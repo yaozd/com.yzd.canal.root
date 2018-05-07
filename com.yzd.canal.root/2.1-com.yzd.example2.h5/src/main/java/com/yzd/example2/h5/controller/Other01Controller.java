@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -19,5 +21,16 @@ public class Other01Controller {
     public List<Other01> doSelectAll() {
         List<Other01> other01List = iOther01ServiceInf.selectAll();
         return other01List;
+    }
+    @RequestMapping("/doUpdateById")
+    @ResponseBody
+    public Integer doUpdateById() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MDDhhmmss");
+        String date = sdf.format(new Date());
+        Other01 item = new Other01();
+        item.setUid(6);
+        item.setName(date);
+        Integer count = iOther01ServiceInf.updateByPrimaryKeySelective(item);
+        return count;
     }
 }

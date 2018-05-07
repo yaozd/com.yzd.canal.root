@@ -49,6 +49,14 @@ http://ssuupv.blog.163.com/blog/static/1461567220135610456193/
 ```
 基于Canal使用HTTP协议跨机房公网同步数据
 http://www.caosh.me/be-tech/canal-sync-db-over-http/
+基于canal的Spring-Boot-Starter
+https://blog.csdn.net/lightofmiracle/article/details/79655186
+spring-boot-starter-canal
+https://github.com/chenqian56131/spring-boot-starter-canal
+canal_mysql_elasticsearch_sync
+https://github.com/starcwang/canal_mysql_elasticsearch_sync
+spring-boot-intergration-example
+https://github.com/mazekkkk7/spring-boot-intergration-example
 ```
 ### 6.canal版本选择-选型时间：20180504
 ```
@@ -57,4 +65,14 @@ http://www.caosh.me/be-tech/canal-sync-db-over-http/
 //canal-server-v1.0.24 下载地址：https://github.com/alibaba/canal/releases
 //canal-server-v1.0.24版本-百度云有备份
 //
+```
+### 7.mysql JDBC连接池使用-c3p0-反查用户ID，再删除私有缓存时间戳版本
+```
+mysql JDBC连接池使用--arvin推荐参考
+https://blog.csdn.net/wild46cat/article/details/60035383
+JDBCPool--arvin推荐参考
+https://github.com/wild46cat/JDBCPool
+Java中JDBC的数据库连接池
+https://blog.csdn.net/dzy21/article/details/51952138
+
 ```
