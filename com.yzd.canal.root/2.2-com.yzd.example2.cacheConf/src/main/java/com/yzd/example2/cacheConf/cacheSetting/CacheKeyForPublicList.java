@@ -10,7 +10,7 @@ public enum  CacheKeyForPublicList {
     /**region*/
     CacheKeyForPublicList(CacheKeyForTimestamp cacheKeyTimestamp,int countForCopyData,String version,String desc,String... tables){
         if(cacheKeyTimestamp.getTimestampType()!=TimestampType.PublicType){
-            throw new IllegalStateException("因为当前是公共缓存KEY的集合，所以缓存时间戳类型必须是TimestampType.PublicType（公有时间戳类型）");
+            throw new IllegalStateException("因为当前是公共缓存KEY的集合，所以缓存时间戳类型必须是TimestampType.PublicType（公有时间戳类型）:cacheKeyTimestamp="+cacheKeyTimestamp.name());
         }
         this.setCacheKeyTimestamp(cacheKeyTimestamp);
         String keyNameForTimestamp=cacheKeyTimestamp.getKeyFullName();
@@ -74,5 +74,9 @@ public enum  CacheKeyForPublicList {
 
     public void setTableList(List<String> tableList) {
         this.tableList = tableList;
+    }
+
+    public String getKeyName(){
+        return CacheConfig.getKeyNameForPublicList(this.name());
     }
 }

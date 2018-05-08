@@ -41,7 +41,7 @@ public class RedisCachePublicAspect {
         String timestampKeyValue = RedisCacheAspectUtil.getTimestampKey(timestampKeyName, CacheConfig.ExpireAllKeySet,CacheConfig.SaveAllKeySet,CacheConfig.TimeoutForPublicKey);
         String whereToJson = FastJsonUtil.serialize(where);
         //P01.UserBaseInfo.1000:1519809133085:86d794ec9adae08014b485df7acf3dac 目前格式-201802-28-1714
-        String dataKeyNameWithTimestamp = methodCache.key().name()+ ":" + timestampKeyValue;
+        String dataKeyNameWithTimestamp = methodCache.key().getKeyName()+ ":" + timestampKeyValue;
         CachedSettingForTVCB cachedSettingForTVCB= CacheUtil.newCachedSettingForTVCB(methodCache.key().getCachedSettingForTVCB());
         cachedSettingForTVCB.setKeyName(dataKeyNameWithTimestamp);
         //1，查询缓存2，执行方法

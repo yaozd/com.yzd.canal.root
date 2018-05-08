@@ -14,8 +14,11 @@ public class CacheConfig {
     //临时测试使用过期时间为60秒
     //public final static Integer TimeoutForPublicKey=60;
     //
-    public static String getKeyFullName(String projectNo,String keyName,String whereMD5){
-        return projectNo+"."+keyName+":"+whereMD5;
+    public static String getKeyNameForPublicList(String keyName){
+        return CacheKeyType.P.name()+":"+keyName;
+    }
+    public static String getKeyNameForPrivateList(String keyName){
+        return CacheKeyType.U.name()+":"+keyName;
     }
     public static String getKeyFullNameForSpecific(String keyName){
         return PROJECT_NO+"."+CacheKeyType.S.name()+":"+keyName;
