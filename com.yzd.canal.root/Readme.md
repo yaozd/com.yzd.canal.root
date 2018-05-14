@@ -20,7 +20,15 @@ P01.Timestamp:userId:1000| String| 私有资源时间戳版本
 P01.UserBaseInfo.1000:1520ben35yo3y:XX| String| 私有资源缓存KEY的名称
 P01.Timestamp:publicNormal| String| 公有资源时间戳版本
 P01.Other1SelectAll:1dben35yo3y8:XX| String| 公有资源缓存KEY的名称
+### 2.1.缓存KEY名称的组织结构示例
+```
+1.公共资源数据KEY 名称=项目编号+缓存KEY的分类标识+KEY 名称+数据时间戳版本号+请求的where条件与数据结构版本号的MD5的值。
 
+例如：P01.P:Other1SelectAll:1ivqqshvquio:c60b7513be64303ca4abcf2775e5150c。
+2.用户私有数据KEY名称=项目编号+缓存KEY的分类标识+KEY 名称+当前用户的唯一标识+数据时间戳版本号+请求的where条件与数据结构版本号的MD5的值。
+
+例如：P01.U:UserBaseInfo.1000:1jgz19byg5xc:86d794ec9adae08014b485df7acf3dac。
+```
 ### 3.通过twitter的snowflake算法解决数据时间戳重复问题
 ```
 根据机器IP获取工作进程Id,如果线上机器的IP二进制表示的最后10位不重复
