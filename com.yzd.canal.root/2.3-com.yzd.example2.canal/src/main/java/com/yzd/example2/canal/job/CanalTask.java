@@ -125,7 +125,7 @@ public class CanalTask {
             System.out.println("/////////////////////");
             if(timestampKeyValue!=null){
                 System.out.println("step01=timestampKeyValue="+timestampKeyValue.getData());
-                System.out.println("step02=redisUtil.del(timestampKeyName);");
+                System.out.println("step02=redisUtil.del(timestampKeyName="+timestampKeyName+");");
                 //
                 String evictAllKeyList= CacheConfig.EvictAllKeyList;
                 String saveAllKeySet=CacheConfig.getKeyFullNameForSaveAllKeySet(timestampKeyValue.getData());

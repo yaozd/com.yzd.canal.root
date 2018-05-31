@@ -52,4 +52,4 @@ CREATE TABLE `other_02` (
 -- ----------------------------
 -- Records of other_02
 -- ----------------------------
-INSERT INTO `other_02` VALUES ('1', 'c');
+INSERT INTO `other_02` VALUES ('6', 'c');

@@ -29,4 +29,25 @@ public class CacheConfig {
     public static String getKeyFullNameForSaveAllKeySet(String timestampKeyValue){
         return SaveAllKeySet+timestampKeyValue;
     }
+
+    /***
+     * 方法只适用于私有缓存中
+     * @param timestampKeyName
+     * @param userId 当前用户的ID
+     * @return
+     */
+    public static String getKeyFullNameForTimestampByUserId(String timestampKeyName,String userId){
+        return timestampKeyName+":"+userId;
+    }
+
+    /***
+     * 方法只适用于私有缓存中
+     * @param dataKeyName
+     * @param userId 当前用户的ID
+     * @param timestampKeyValue 当前数据关联的时间戳的值
+     * @return
+     */
+    public static String getKeyFullNameForDataWithTimestampByUserId(String dataKeyName,String userId,String timestampKeyValue){
+        return dataKeyName+":"+userId+ ":" + timestampKeyValue;
+    }
 }

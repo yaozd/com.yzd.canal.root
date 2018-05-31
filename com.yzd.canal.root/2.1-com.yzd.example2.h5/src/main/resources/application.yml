@@ -1,6 +1,9 @@
 #server
 server:
     port: 8080
+    tomcat:
+      max-threads: 800
+      uri-encoding: UTF-8
 spring:
   datasource:
       driver-class-name: com.mysql.jdbc.Driver

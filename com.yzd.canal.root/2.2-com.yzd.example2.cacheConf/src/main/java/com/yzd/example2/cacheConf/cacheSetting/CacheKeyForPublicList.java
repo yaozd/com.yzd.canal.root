@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum  CacheKeyForPublicList {
-    Other1SelectAll(CacheKeyForTimestamp.TbOther01TM,10,"1.0","缓存Other1SelectAll信息","other_01");
+    Other1SelectAll(CacheKeyForTimestamp.TbOther01TM,3,"1.0","缓存Other1SelectAll信息","other_01");
     /**region*/
     CacheKeyForPublicList(CacheKeyForTimestamp cacheKeyTimestamp,int countForCopyData,String version,String desc,String... tables){
         if(cacheKeyTimestamp.getTimestampType()!=TimestampType.PublicType){
@@ -76,7 +76,7 @@ public enum  CacheKeyForPublicList {
         this.tableList = tableList;
     }
 
-    public String getKeyName(){
+    public String getKeyNameForData(){
         return CacheConfig.getKeyNameForPublicList(this.name());
     }
 }

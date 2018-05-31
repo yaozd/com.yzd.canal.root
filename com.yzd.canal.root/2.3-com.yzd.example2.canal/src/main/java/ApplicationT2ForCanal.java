@@ -20,7 +20,9 @@ public class ApplicationT2ForCanal {
     }
 
     public static void main(String[] args) throws InterruptedException {
-
+        //canal的启动地址
+        //F:\tmp\canal.deployer-1.0.24\bin
+        //
         logger.info("项目启动--BEGIN");
         SpringApplication app = new SpringApplication(ApplicationT2ForCanal.class);
         app.setBannerMode(Banner.Mode.OFF);
