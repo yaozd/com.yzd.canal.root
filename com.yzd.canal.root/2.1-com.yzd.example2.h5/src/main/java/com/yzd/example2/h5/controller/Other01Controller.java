@@ -33,4 +33,14 @@ public class Other01Controller {
         Integer count = iOther01ServiceInf.updateByPrimaryKeySelective(item);
         return count;
     }
+
+    /***
+     * 测试使用
+     * @return
+     */
+    @RequestMapping("/doNull")
+    @ResponseBody
+    public String doNull(){
+        return "OK";
+    }
 }
