@@ -84,3 +84,8 @@ Java中JDBC的数据库连接池
 https://blog.csdn.net/dzy21/article/details/51952138
 
 ```
+### 在线unicode转中文|中文转unicode
+```
+在线unicode转中文|中文转unicode
+https://www.junphp.com/tool/unicode.html
+```
