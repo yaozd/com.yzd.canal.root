@@ -14,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 public class ApplicationT2ForH5 extends SpringBootServletInitializer {
     /**
      * Used when run as JAR
+     * http://localhost:9000/
      */
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(ApplicationT2ForH5.class);

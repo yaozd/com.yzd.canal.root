@@ -3,6 +3,12 @@
 ```
 .doc->tb_other_test.sql
 ```
+### 0.程序启动
+- com.yzd.example2.h5（写入缓存）
+- com.yzd.example2.canal（监听Mysql,更新缓存）
+- com.yzd.example2.cleaner（清理无效缓存）
+- 
+
 ### 1.REDIS相关操作
 ```
 Redis操作字符串工具类封装：http://fanshuyao.iteye.com/blog/2326221
